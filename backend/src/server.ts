@@ -4,11 +4,13 @@ import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
 import messageRouter from "./routes/messageRoutes";
 import chatRouter from "./routes/chatRoutes";
-
+import { clerkMiddleware } from '@clerk/express'
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
 // Middleware
+app.use(clerkMiddleware());
 app.use(express.json());
 
 // Routes
@@ -17,6 +19,9 @@ app.use('/api/chats',chatRouter);
 app.use('/api/messages',messageRouter);
 app.use('/api/users',userRouter);
 
+
+// Error Handles
+app.use(errorHandler);
 
 
 app.get('/',(req,res)=>{

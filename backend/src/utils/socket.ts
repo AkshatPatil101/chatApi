@@ -6,9 +6,6 @@ import Chat from "../models/Chat"
 import {User} from "../models/User"
 
 
-interface SocketWithUserId extends Socket{
-    userId:string;
-}
 
 export const onlineUsers:Map<string,string> = new Map()
 
@@ -35,7 +32,7 @@ export const initializeSocket = (httpServer:HttpServer) => {
 
             if(!user) return next(new Error("User not Found"));
 
-            (socket as SocketWithUserId).userId = user._id.toString();
+            socket.data.userId = user._id.toString();
 
             next();
 
@@ -46,7 +43,7 @@ export const initializeSocket = (httpServer:HttpServer) => {
 
     // Event triggered when a new client connects to the server
     io.on("connection", (socket) => {
-        const userId = (socket as SocketWithUserId).userId;
+        const userId = socket.data.userId;
 
         // list of al connected users
         socket.emit("online-users", {userIds: Array.from(onlineUsers.keys())});
@@ -89,7 +86,7 @@ export const initializeSocket = (httpServer:HttpServer) => {
                 chat.lastMessageAt = new Date();
                 await chat.save();
 
-                message.populate("sender","name email avatar");
+                await message.populate("sender","name avatar");
 
                 //emit to chat room 
                 io.to(`chat:${chatId}`).emit("new-message",message);

@@ -1,20 +1,17 @@
-import { Text, View, Image } from "react-native";
+import { Redirect } from "expo-router";
+import { useAuth } from "@clerk/clerk-expo";
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>It works</Text>
-      <Image source={require("../assets/images/turbo.png")} style={{
-        height:200,
-        width:200
-      }}/>
-      
-    </View>
-  );
+  const { isSignedIn, isLoaded } = useAuth();
+
+  // Wait for Clerk to load the session
+  if (!isLoaded) return null;
+
+  if (isSignedIn) {
+    // If logged in, send them to the tabs
+    return <Redirect href="/(tabs)" />;
+  } else {
+    // If not logged in, send them to auth
+    return <Redirect href="/(auth)" />;
+  }
 }

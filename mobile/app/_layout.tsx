@@ -11,7 +11,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const queryClient = new QueryClient();
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
 export default function RootLayout() {
 
@@ -24,8 +23,7 @@ export default function RootLayout() {
     return null; 
   }
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <ClerkProvider tokenCache={tokenCache}>
         <QueryClientProvider client={queryClient}>
           <Stack screenOptions={{ headerShown: false }} >
             <Stack.Screen name="(auth)" />   
@@ -33,7 +31,6 @@ export default function RootLayout() {
           </Stack> 
         </QueryClientProvider>
       </ClerkProvider>
-    </GestureHandlerRootView>
   );
 }
 

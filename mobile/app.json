@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.akshatp101.mobile"
     },
     "web": {
       "output": "static",
@@ -30,7 +31,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/turbo.png",
+          "image": "./assets/images/bolt-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#17191B",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a037f6e2-dfcd-451f-98be-a87838b9f240"
+      }
     }
   }
 }

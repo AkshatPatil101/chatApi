@@ -7,7 +7,7 @@ export default function Index() {
   // Wait for Clerk to load the session
   if (!isLoaded) return null;
 
-  if (!isSignedIn) {
+  if (isSignedIn) {
     // If logged in, send them to the tabs
     return <Redirect href="/(tabs)" />;
   } else {

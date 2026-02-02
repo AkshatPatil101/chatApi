@@ -40,7 +40,7 @@ const TabsLayout = () => {
               width: 70,
               height: 34,
               borderRadius:20,
-              backgroundColor: focused ? '#1E1E20' : 'transparent',
+              backgroundColor: focused ? '#2B2B2E' : 'transparent',
               alignItems: 'center',
               justifyContent: 'center'
             }}>
@@ -60,7 +60,7 @@ const TabsLayout = () => {
               width: 70,
               height: 34,
               borderRadius:20,
-              backgroundColor: focused ? '#1E1E20' : 'transparent',
+              backgroundColor: focused ? '#2B2B2E' : 'transparent',
               alignItems: 'center',
               justifyContent: 'center'
             }}>

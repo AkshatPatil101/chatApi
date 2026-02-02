@@ -26,7 +26,7 @@ export async function authCallBack(req:Request, res:Response, next:NextFunction)
         if(!clerkId) return res.status(401).json({message:"Unathorized - Invalid Token"});
 
         let user = await User.findOne({clerkId:clerkId});
-
+        console.log('hit');
         if(!user){
             const clerkUser = await clerkClient.users.getUser(clerkId);
 

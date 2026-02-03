@@ -1,12 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 import Chat from "../models/Chat";
 import type { AuthRequest } from "../middleware/auth";
+import { json } from "stream/consumers";
 
 export async function getChats(req:AuthRequest, res:Response, next:NextFunction){
     try {
 
         const userId = req.userId;
-
+        console.log(userId)
         const chats = await Chat.find({
             participants:userId
         }).populate("participants","name email avatar").populate("lastMessage","text").sort({lastMessageAt:-1}); // Desc (Latest First)
@@ -17,13 +18,13 @@ export async function getChats(req:AuthRequest, res:Response, next:NextFunction)
             const otherParticipants = chat.participants.find(p => p._id.toString()!==userId);
             return {
                 _id:chat._id,
-                participants:otherParticipants ?? null,
+                participant:otherParticipants ?? null,
                 lastMessage:chat.lastMessage,
                 lastMessageAt:chat.lastMessageAt,
                 createdAt:chat.createdAt
             }
         })
-
+        console.log()
         res.status(200).json(formattedChats);
 
     } catch (error) {
@@ -61,7 +62,7 @@ export async function getOrCreateChat(req:AuthRequest, res:Response, next:NextFu
 
         res.json({
             _id:chat._id,
-            participants:otherParticipants ?? null,
+            participant:otherParticipants ?? null,
             lastMessage:chat.lastMessage,
             lastMessageAt:chat.lastMessageAt,
             createdAt:chat.createdAt

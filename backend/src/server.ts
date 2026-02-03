@@ -26,20 +26,20 @@ app.use('/api/users',userRouter);
 app.use(errorHandler);
 
 
-app.get('/',(req,res)=>{
+app.get('/health',(req,res)=>{
     res.status(200).json({
         status:"ok",
         message:"Server running"
     })
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const httpServer = createServer(app);
 
 initializeSocket(httpServer);
 
-app.listen(PORT,()=>{
+app.listen(PORT,'0.0.0.0',()=>{
     connectDB();
     console.log(`Listening on port ${PORT}`);
 })

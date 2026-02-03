@@ -101,7 +101,7 @@ const ChatsTab = () => {
   return (
     <SafeAreaView className='bg-surface flex-1' edges={['top']}>
       <FlatList 
-      data={chaats}
+      data={chats}
       keyExtractor={item=>item._id}
       renderItem={({item})=>(
         <ChatItem chat={item} onPress={()=>handleChatPress(item)}/>
@@ -114,7 +114,7 @@ const ChatsTab = () => {
         paddingBottom:24
       }}
       ListHeaderComponent={<Header />}
-      ListEmptyComponent={<EmptyUi title='No chats yet' subtitle='Start a conversation!' iconSize={64} buttonLabel='New Chat' onPressButton={()=>{console.log("Pressed")}}/>}
+      ListEmptyComponent={<EmptyUi title='No chats yet' subtitle='Start a conversation!' iconSize={64} buttonLabel='New Chat' onPressButton={()=>router.push('/new-chat')}/>}
       />        
 
     </SafeAreaView>
@@ -140,8 +140,9 @@ function Header() {
         </View> 
 
         <Pressable
+          hitSlop={2}
           className="size-10 bg-primary rounded-full items-center justify-center"
-          //onPress={() => router.push("/new-chat")}
+          onPress={() => router.push("/new-chat")}
           >
           <Ionicons name="create-outline" size={20} color="#0D0D0F" />
         </Pressable>

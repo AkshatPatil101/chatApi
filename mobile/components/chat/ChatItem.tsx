@@ -3,11 +3,15 @@ import { Image } from "expo-image";
 import { View, Text, Pressable } from "react-native";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-
 const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
+  // --- DEFENSIVE CHECK 1 ---
+  // If chat or participant is missing, return null to prevent app crash
+  if (!chat || !chat.participant) {
+    console.log("hmm")
+    return null;
+  }
+
   const participant = chat.participant;
-
-
 
   const isOnline = true;
   const isTyping = false;
@@ -17,7 +21,12 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
     <Pressable className="flex-row items-center py-[14px] active:opacity-70" onPress={onPress}>
       {/* avatar & online indicator */}
       <View className="relative">
-        <Image source={{uri:participant.avatar}} style={{ width: 50, height: 50, borderRadius: 999 }} />
+        <Image 
+          // --- DEFENSIVE CHECK 2 ---
+          // Use optional chaining and a fallback placeholder string
+          source={{ uri: participant?.avatar || "" }} 
+          style={{ width: 50, height: 50, borderRadius: 999 }} 
+        />
         {isOnline && (
           <View className="absolute bottom-0 right-0 size-4 bg-green-500 rounded-full border-[3px] border-surface" />
         )}
@@ -29,13 +38,14 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
           <Text
             className={`text-[16px] font-[500] ${hasUnread ? "text-primary" : "text-foreground"}`}
           >
-            {participant.name}
+            {/* Fallback for name */}
+            {participant?.name || "Unknown"}
           </Text>
 
           <View className="flex-row items-center gap-2">
             {hasUnread && <View className="w-2.5 h-2.5 bg-primary rounded-full" />}
             <Text className="text-[12px] text-[#848484]">
-4:00 pm
+              4:00 pm
             </Text>
           </View>
         </View>
@@ -56,4 +66,5 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
     </Pressable>
   );
 };
+
 export default ChatItem;

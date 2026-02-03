@@ -11,7 +11,8 @@ import { Chat } from '@/types'
 const ChatsTab = () => {
 
   const router = useRouter();
-  const {data:chats, isLoading, error} = useChats();  // get Chats
+  const {data:chats, isLoading, refetch, error} = useChats();  // get Chats
+
 
   if(isLoading){
     return(
@@ -24,7 +25,10 @@ const ChatsTab = () => {
   if (error) {
     return (
       <View className="flex-1 bg-surface items-center justify-center">
-        <Text className="text-red-500 text-3xl">Unable to Load Chats</Text>
+        <Text className="text-red-500 text-3xl">Failed to load chats</Text>
+        <Pressable onPress={() => refetch()} className="mt-4 px-4 py-2 bg-primary rounded-lg">
+          <Text className="text-foreground">Retry</Text>
+        </Pressable>
       </View>
     );
   }
@@ -39,12 +43,65 @@ const ChatsTab = () => {
         avatar:chat.participant.avatar,
       },
     });
-  } ; 
+  }; 
+
+  const chaats:Chat[] = [{
+    _id:"123213",
+    participant:{
+      _id:"44444",
+      name:"Arun Joshi",
+      email:"kisho@gmail.com",
+      avatar:"https://i.pravatar.cc/150?img=3"
+    },
+    lastMessage:{
+      _id:"88",
+      text:"hey come quick",
+      sender:"Arun Joshi",
+      createdAt:(new Date()).toDateString(),
+    },
+    lastMessageAt:"Tue Feb 03 2026 16:49:00",
+    createdAt:"2024-09-12",
+  },
+  {
+      _id:"1",
+    participant:{
+      _id:"76",
+      name:"Rohit Doke",
+      email:"kisho@gmail.com",
+      avatar:"https://i.pravatar.cc/150?img=2"
+    },
+    lastMessage:{
+      _id:"544",
+      text:"hey come quick",
+      sender:"Arun Joshi",
+      createdAt:(new Date()).toDateString(),
+    },
+    lastMessageAt:"2024-09-12",
+    createdAt:"2024-09-12",
+  },
+  {
+      _id:"2",
+    participant:{
+      _id:"5454",
+      name:"Varad",
+      email:"kisho@gmail.com",
+      avatar:"https://i.pravatar.cc/150?img=1"
+    },
+    lastMessage:{
+      _id:"88333",
+      text:"~ Avishkar Joshi added ~ Rohan",
+      sender:"Arun Joshi",
+      createdAt:(new Date()).toDateString(),
+    },
+    lastMessageAt:"2024-09-12",
+    createdAt:"2024-09-12",
+  }
+];
 
   return (
     <SafeAreaView className='bg-surface flex-1' edges={['top']}>
       <FlatList 
-      data={chats}
+      data={chaats}
       keyExtractor={item=>item._id}
       renderItem={({item})=>(
         <ChatItem chat={item} onPress={()=>handleChatPress(item)}/>
@@ -52,7 +109,7 @@ const ChatsTab = () => {
       showsVerticalScrollIndicator={false}
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={{
-        paddingHorizontal:20,
+        paddingHorizontal:19,
         paddingTop:16,
         paddingBottom:24
       }}
@@ -69,7 +126,7 @@ function Header() {
   const router = useRouter();
 
   return (
-    <View className="px-5 pt-2 pb-4">
+    <View className="px-2 pt-2 pb-4 mb-4">
       <View className="flex-row items-center justify-between">
 
         <View className='flex-row'>

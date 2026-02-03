@@ -3,7 +3,7 @@ import { useAuth } from '@clerk/clerk-expo'
 import { useEffect,useCallback } from 'react'
 
 
-const API_URL = "http://10.186.137.57:3000/api"
+const API_URL = "http://10.186.137.78:3000/api"
 
 
 const api = axios.create({

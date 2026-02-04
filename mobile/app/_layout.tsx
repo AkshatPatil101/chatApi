@@ -6,6 +6,8 @@ import '../global.css';
 import { useFonts } from 'expo-font';
 import AuthSync from "@/components/auth/AuthSync";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import SocketConnection from "@/components/auth/SocketConnection";
+
 
 const queryClient = new QueryClient();
 
@@ -23,7 +25,7 @@ export default function RootLayout() {
       <ClerkProvider tokenCache={tokenCache}>
         <QueryClientProvider client={queryClient}>
           <AuthSync />
-          
+          <SocketConnection />  
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />   
             <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />

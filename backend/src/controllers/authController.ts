@@ -10,7 +10,7 @@ export async function getMe(req:AuthRequest,res:Response, next:NextFunction){
 
         if(!user) return res.status(404).json({message:"User not Found"});
 
-        res.status(200).json({user});
+        res.status(200).json(user);
 
     } catch (error) {
        res.status(500)
@@ -26,7 +26,6 @@ export async function authCallBack(req:Request, res:Response, next:NextFunction)
         if(!clerkId) return res.status(401).json({message:"Unathorized - Invalid Token"});
 
         let user = await User.findOne({clerkId:clerkId});
-        console.log('hit');
         if(!user){
             const clerkUser = await clerkClient.users.getUser(clerkId);
 

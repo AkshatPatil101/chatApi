@@ -13,7 +13,6 @@ export async function getChats(req:AuthRequest, res:Response, next:NextFunction)
         }).populate("participants","name email avatar").populate("lastMessage","text").sort({lastMessageAt:-1}); // Desc (Latest First)
 
         if(!chats) return res.status(404).json({message:"No chats available"});
-
         const formattedChats = chats.map((chat)=>{
             const otherParticipants = chat.participants.find(p => p._id.toString()!==userId);
             return {
@@ -24,7 +23,7 @@ export async function getChats(req:AuthRequest, res:Response, next:NextFunction)
                 createdAt:chat.createdAt
             }
         })
-        console.log()
+        console.log("hit");
         res.status(200).json(formattedChats);
 
     } catch (error) {

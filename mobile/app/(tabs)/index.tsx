@@ -13,7 +13,7 @@ const ChatsTab = () => {
   const router = useRouter();
   const {data:chats, isLoading, refetch, error} = useChats();  // get Chats
 
-
+  console.log(error)
   if(isLoading){
     return(
       <View className='flex-1 bg-surface justify-center items-center'>

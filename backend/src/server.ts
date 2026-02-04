@@ -39,10 +39,9 @@ const httpServer = createServer(app);
 
 initializeSocket(httpServer);
 
-app.listen(PORT,'0.0.0.0',()=>{
+httpServer.listen(PORT, '0.0.0.0', () => {
     connectDB();
-    console.log(`Listening on port ${PORT}`);
-})
-
+    console.log(`🚀 Server & Sockets running on port ${PORT}`);
+});
 
 export default app;

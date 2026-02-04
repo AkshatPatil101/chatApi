@@ -3,7 +3,8 @@ import { useAuth } from '@clerk/clerk-expo'
 import { useEffect,useCallback } from 'react'
 
 
-const API_URL = "http://10.186.137.150:3000/api"
+//const API_URL = "https://bolt-chat-backend.onrender.com/api"
+const API_URL = "http://10.186.137.50:3000/api";
 
 
 const api = axios.create({

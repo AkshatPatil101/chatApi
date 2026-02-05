@@ -20,7 +20,7 @@ export async function getMe(req:AuthRequest,res:Response, next:NextFunction){
 
 export async function authCallBack(req:Request, res:Response, next:NextFunction){
     try {
-
+        console.log("authCallBack is called")
         const {userId:clerkId} = getAuth(req);
 
         if(!clerkId) return res.status(401).json({message:"Unathorized - Invalid Token"});

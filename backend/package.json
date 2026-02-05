@@ -3,11 +3,11 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-"scripts": {
-  "dev": "bun --watch ./src/server.ts",
-  "start": "bun ./src/server.ts",
-  "build": "bun install" 
-},
+  "scripts": {
+    "dev": "bun --watch ./src/server.ts",
+    "start": "bun ./src/server.ts",
+    "build": "bun install"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -17,6 +17,7 @@
   "dependencies": {
     "@clerk/express": "^1.7.67",
     "@types/express": "^5.0.6",
+    "axios": "^1.13.4",
     "clerk": "^0.8.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",

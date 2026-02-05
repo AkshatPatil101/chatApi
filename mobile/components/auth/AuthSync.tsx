@@ -1,7 +1,7 @@
 import { useAuthCallback } from "@/hooks/useAuth"
 import { useEffect, useRef } from "react"
 import { useAuth, useUser } from "@clerk/clerk-expo"
-
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthSync = () => {
 
@@ -10,7 +10,8 @@ const AuthSync = () => {
     const {mutate:syncUser} = useAuthCallback();
 
     const hasSynced = useRef(false); // useEffect runs only once
-    
+    const queryClient = useQueryClient();
+
     useEffect(()=>{
         if(isSignedIn && user && !hasSynced.current){
             hasSynced.current = true;
@@ -18,9 +19,11 @@ const AuthSync = () => {
             syncUser(undefined,{
                 onSuccess:(data)=>{
                     console.log(`User ${data.name} synced`)
+                    queryClient.setQueryData(["currentUser"], data);
                 },
-                onError:(data)=>{
-                    console.log(`-- User ${data.name} not synced`);
+                onError:(error)=>{
+                    console.log("❌ User not synced", error);
+                    hasSynced.current = false; // allow retry
                 }
             })
         }
@@ -28,7 +31,7 @@ const AuthSync = () => {
         if(!isSignedIn){
             hasSynced.current = false;
         }
-    },[isSignedIn,user,syncUser])
+    },[isSignedIn,user,syncUser,queryClient])
 
 
   return null

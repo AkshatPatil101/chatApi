@@ -3,8 +3,8 @@ import { useAuth } from '@clerk/clerk-expo'
 import { useEffect,useCallback } from 'react'
 
 
-//const API_URL = "https://bolt-chat-backend.onrender.com/api"
-const API_URL = "http://10.186.137.62:3000/api";
+const API_URL = "https://bolt-chat-backend.onrender.com/api"
+//const API_URL = "http://10.186.137.62:3000/api";
 //const API_URL = "https://dionne-canonical-jessika.ngrok-free.dev/api"
 
 

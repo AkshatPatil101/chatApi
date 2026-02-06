@@ -4,9 +4,9 @@ import { ClerkProvider } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import '../global.css';
 import { useFonts } from 'expo-font';
-import AuthSync from "@/components/auth/AuthSync";
+import AuthSync from "../components/auth/AuthSync";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import SocketConnection from "@/components/auth/SocketConnection";
+import SocketConnection from "../components/auth/SocketConnection";
 
 
 const queryClient = new QueryClient();

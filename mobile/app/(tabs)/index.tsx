@@ -1,5 +1,5 @@
 import { View, Text, FlatList, ActivityIndicator, Pressable } from "react-native";
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useChats } from "@/hooks/useChats";
@@ -7,18 +7,25 @@ import ChatItem from "@/components/chat/ChatItem";
 import { Ionicons } from "@expo/vector-icons";
 import EmptyUi from "@/components/chat/EmptyUi";
 import { Chat } from "@/types";
+import { useSocketStore } from "@/lib/socket";
 
 const ChatsTab = () => {
   const router = useRouter();
   const { data: chats, isLoading, refetch, error } = useChats();
+  
+const { isConnected } = useSocketStore();
+const hasConnectedOnce = React.useRef(false);
 
-  if (isLoading) {
-    return (
-      <View className="flex-1 bg-surface justify-center items-center">
-        <ActivityIndicator size="large" color="#F4A261" />
-      </View>
-    );
+useEffect(() => {
+  if (isConnected) {
+    if (hasConnectedOnce.current) {
+      refetch();
+      console.log("fetch chats again ---")
+    }
+    hasConnectedOnce.current = true;
   }
+}, [isConnected, refetch]);
+
 
   if (error) {
     return (
@@ -45,6 +52,12 @@ const ChatsTab = () => {
 
   return (
     <SafeAreaView className="bg-surface flex-1" edges={["top"]}>
+      <Header />
+      {isLoading ? (
+              <View className="flex-1 bg-surface justify-center items-center">
+              <ActivityIndicator size="large" color="#F4A261" />
+            </View>
+      ) : (
       <FlatList
         data={chats}
         keyExtractor={(item) => item._id}
@@ -52,7 +65,6 @@ const ChatsTab = () => {
         showsVerticalScrollIndicator={false}
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ paddingHorizontal: 19, paddingTop: 16, paddingBottom: 24 }}
-        ListHeaderComponent={<Header />}
         ListEmptyComponent={
           <EmptyUi
             title="No chats yet"
@@ -63,6 +75,7 @@ const ChatsTab = () => {
           />
         }
       />
+      )}
     </SafeAreaView>
   );
 };
@@ -71,11 +84,11 @@ function Header() {
   const router = useRouter();
 
   return (
-    <View className="px-2 pt-2 pb-4 mb-4">
+    <View className="px-5 pt-4 pb-4 mb-1 mt-4">
       <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center">
-          <Ionicons name="flash" size={31} color="#F4A261" style={{ marginRight: 8 }} />
-          <Text className="text-4xl font-bold text-foreground">Bolt</Text>
+        <View className="flex-row items-center justify-center">
+          <Ionicons name="flash" size={34} color="#F4A261" style={{ marginRight: 8 }} />
+          <Text className="text-[34px] font-bold text-foreground">Bolt</Text>
         </View>
 
         <Pressable

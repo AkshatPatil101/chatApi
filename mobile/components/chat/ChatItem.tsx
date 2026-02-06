@@ -2,20 +2,21 @@ import { Chat } from "@/types";
 import { Image } from "expo-image";
 import { View, Text, Pressable } from "react-native";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import { useSocketStore } from "@/lib/socket";
 
 const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
   // --- DEFENSIVE CHECK 1 ---
   // If chat or participant is missing, return null to prevent app crash
+  const participant = chat.participant;
+  const { onlineUsers, typingUsers, unreadChats } = useSocketStore();
   if (!chat || !chat.participant) {
     console.log("hmm")
     return null;
   }
 
-  const participant = chat.participant;
-
-  const isOnline = true;
-  const isTyping = false;
-  const hasUnread = true;
+  const isOnline = onlineUsers.has(participant._id);
+  const isTyping = typingUsers.get(chat._id) === participant._id;
+  const hasUnread = unreadChats.has(chat._id);
 
   return (
     <Pressable className="flex-row items-center py-[14px] active:opacity-70" onPress={onPress}>

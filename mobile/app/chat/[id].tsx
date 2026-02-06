@@ -7,7 +7,7 @@ import { MessageSender } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState,useEffect } from "react";
 import {
   View,
   Text,
@@ -43,19 +43,30 @@ const ChatDetailScreen = () => {
   const isTyping = typingUsers.get(chatId) === participantId;
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
 
-  // 🔹 Join chat + refetch on screen focus, leave on unfocus
+
+  //  Join chat & refetch on screen focus, leave on unfocus
+  
+  useEffect(() => {
+    if (!isConnected || !chatId) return;
+    
+    refetch();
+    console.log("refetch messages after socket reconnect", chatId);
+  }, [isConnected, chatId, refetch]);
+
+  // Handle joining/leaving chat room
   useFocusEffect(
     useCallback(() => {
       if (!chatId || !isConnected) return;
 
       joinChat(chatId);
-      refetch();
 
       return () => {
         leaveChat(chatId);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       };
-    }, [chatId, isConnected])
+    }, [chatId, isConnected, joinChat, leaveChat])
   );
 
   // Handle typing

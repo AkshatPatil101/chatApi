@@ -4,7 +4,8 @@ import { QueryClient } from "@tanstack/react-query";
 import { Message, MessageSender, Chat } from "@/types";
 
 // const SOCKET_URL = "https://bolt-chat-backend.onrender.com";
-const SOCKET_URL = "http://10.186.137.84:3000";
+const SOCKET_URL = "http://10.186.137.62:3000";
+//const SOCKET_URL = "https://dionne-canonical-jessika.ngrok-free.dev"
 
 interface ScoketState {
   socket: Socket | null;

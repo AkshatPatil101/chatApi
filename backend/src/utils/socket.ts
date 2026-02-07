@@ -87,27 +87,67 @@ export const initializeSocket = (httpServer: HttpServer) => {
           return;
         }
 
+        // 🔑 CHECK WHO'S IN THE CHAT ROOM RIGHT NOW
+        const socketsInRoom = await io.in(`chat:${chatId}`).fetchSockets();
+        const activeUserIds = socketsInRoom.map(s => s.data.userId);
+
+        // Build readBy array
+        const readBy = [userId]; // Sender always reads their own message
+        
+        chat.participants.forEach((participantId: any) => {
+          const pId = participantId.toString();
+          if (pId !== userId && activeUserIds.includes(pId)) {
+            // Other person is actively in the chat room → add to readBy
+            readBy.push(pId);
+          }
+        });
+
         const message = await Message.create({
           chat: chatId,
           sender: userId,
           text,
         });
 
+        // Update chat with correct readBy
         chat.lastMessage = message._id;
         chat.lastMessageAt = new Date();
+        chat.readBy = readBy; // ✅ SET CORRECT readBy
         await chat.save();
 
         await message.populate("sender", "name avatar");
 
         // emit to chat room (for users inside the chat)
-        io.to(`chat:${chatId}`).emit("new-message", message);
-        console.log(`✅ [MSG] Broadcasted to chat:${chatId}`);
+        const messageWithChatData = {
+          ...message.toObject(),
+          chatReadBy: chat.readBy
+        };
+        io.to(`chat:${chatId}`).emit("new-message", messageWithChatData);
+        console.log(`✅ [MSG] Broadcasted to chat:${chatId} | readBy: [${readBy.join(', ')}]`);
 
         // also emit to participants' personal rooms (for chat list view)
         for (const participantId of chat.participants) {
-          io.to(`user:${participantId}`).emit("new-message", message);
+          const messageWithChatData = {
+            ...message.toObject(),
+            chatReadBy: chat.readBy
+          };
+          
+          io.to(`user:${participantId}`).emit("new-message", messageWithChatData);
           console.log(`🔔 [MSG] Notification sent to personal room: user:${participantId}`);
         }
+
+        // ✅ Emit read status update to all participants
+        for (const participantId of chat.participants) {
+          const pId = participantId.toString();
+          const isRead = chat.readBy.includes(pId);
+          
+          io.to(`user:${pId}`).emit("chat-read-status", {
+            chatId: chat._id,
+            isRead
+          });
+          
+          console.log(`📬 [READ-STATUS] Sent to user:${pId} | Chat: ${chatId} | isRead: ${isRead}`);
+        }
+
       } catch (error: any) {
         console.log(`❌ [MSG] Failed to process message: ${error.message}`);
         socket.emit("socket-error", { message: "Failed to send message" });
@@ -136,6 +176,37 @@ export const initializeSocket = (httpServer: HttpServer) => {
       } catch (error) {
         // silently fail
       }
+    });
+
+    socket.on("chat:markRead", async (chatId: string) => {
+      const userId = socket.data.userId;
+      const chat = await Chat.findById(chatId).populate("lastMessage");
+      
+      if (!chat || !chat.lastMessage) return;
+      
+      // 🔑 CRITICAL CHECK
+      // If last message was sent by THIS user → do nothing
+      console.log(chat.lastMessage.sender.toString(), "++++");
+      if (chat.lastMessage.sender.toString() === userId) {
+        console.log("message read by self ---");
+        console.log(chat.readBy[0],chat.readBy[1],"----- who is in")
+        return;
+      }
+
+      // Mark chat as read for this user
+      await Chat.updateOne(
+        { _id: chatId },
+        { $addToSet: { readBy: userId } }
+      );
+
+      console.log(chat.readBy[0],chat.readBy[1])
+      console.log(`👀 [READ] ${userId} read chat ${chatId}`);
+
+      // ✅ Notify THIS user that their chat is now read
+      socket.emit("chat-read-status", {
+        chatId,
+        isRead: true
+      });
     });
 
     socket.on("disconnect", (reason) => {

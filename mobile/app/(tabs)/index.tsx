@@ -14,17 +14,13 @@ const ChatsTab = () => {
   const { data: chats, isLoading, refetch, error } = useChats();
   
 const { isConnected } = useSocketStore();
-const hasConnectedOnce = React.useRef(false);
 
-useEffect(() => {
-  if (isConnected) {
-    if (hasConnectedOnce.current) {
+ useEffect(() => {
+    if (isConnected) {
+      console.log("🔌 Socket connected → refetching chats");
       refetch();
-      console.log("fetch chats again ---")
     }
-    hasConnectedOnce.current = true;
-  }
-}, [isConnected, refetch]);
+  }, [isConnected, refetch]);
 
 
   if (error) {

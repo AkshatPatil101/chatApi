@@ -6,6 +6,7 @@ export interface IChat extends Document{
     lastMessageAt?:Date;
     createdAt:Date;
     updatedAt:Date;
+    readBy:mongoose.Types.ObjectId[];
 }
 
 
@@ -25,7 +26,12 @@ const ChatSchema = new mongoose.Schema<IChat>({
     lastMessageAt:{
         type:Date,
         default:Date.now()
-    }
+    },
+    
+  readBy: [{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  }],
 },{timestamps:true})
 
 

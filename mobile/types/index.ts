@@ -34,4 +34,5 @@ export interface Chat {
   lastMessage: ChatLastMessage | null;
   lastMessageAt: string;
   createdAt: string;
+  isRead:boolean
 }

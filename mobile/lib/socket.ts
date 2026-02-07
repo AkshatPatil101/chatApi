@@ -4,15 +4,13 @@ import { QueryClient } from "@tanstack/react-query";
 import { Message, MessageSender, Chat } from "@/types";
 
 const SOCKET_URL = "https://bolt-chat-backend.onrender.com";
-//const SOCKET_URL = "http://10.186.137.62:3000";
-//const SOCKET_URL = "https://dionne-canonical-jessika.ngrok-free.dev"
 
 interface ScoketState {
   socket: Socket | null;
   isConnected: boolean;
 
   onlineUsers: Set<string>;
-  typingUsers: Map<string, string>; // chatId -> userId (1-to-1 only)
+  typingUsers: Map<string, string>; 
   unreadChats: Set<string>;
   currentChatId: string | null;
 
@@ -160,22 +158,14 @@ export const useSocketStore = create<ScoketState>((set, get) => ({
 
       /* 3️⃣ unread */
       if (currentChatId !== message.chat) {
-        const chats =
-          queryClient.getQueryData<Chat[]>(["chats"]);
-
-        const chat = chats?.find(
-          (c) => c._id === message.chat
-        );
-
-        if (chat?.participant && senderId === chat.participant._id) {
-          set((state) => ({
-            unreadChats: new Set([
-              ...state.unreadChats,
-              message.chat,
-            ]),
-          }));
-        }
+        set((state) => ({
+          unreadChats: new Set([
+            ...state.unreadChats,
+            message.chat,
+          ]),
+        }));
       }
+
 
       /* 4️⃣ clear typing */
       set((state) => {
@@ -209,6 +199,24 @@ export const useSocketStore = create<ScoketState>((set, get) => ({
         });
       }
     );
+
+    /* =======================
+       READ STATUS UPDATE
+    ======================== */
+    socket.on("chat-read-status", ({ chatId, isRead }: { chatId: string; isRead: boolean }) => {
+      const { queryClient } = get();
+      if (!queryClient) return;
+
+      queryClient.setQueryData<Chat[]>(["chats"], (old) =>
+        old?.map((chat) =>
+          chat._id === chatId
+            ? { ...chat, isRead }
+            : chat
+        )
+      );
+
+      console.log(`📬 [READ-STATUS] Updated chat ${chatId} | isRead: ${isRead}`);
+    });
   },
 
   /* =======================
@@ -237,16 +245,13 @@ export const useSocketStore = create<ScoketState>((set, get) => ({
   joinChat(chatId) {
     const socket = get().socket;
 
-    set((state) => {
-      const unreadChats = new Set(state.unreadChats);
-      unreadChats.delete(chatId);
-      return { currentChatId: chatId, unreadChats };
-    });
+    set({ currentChatId: chatId });
 
     if (socket?.connected) {
       socket.emit("join-chat", chatId);
     }
   },
+
 
   leaveChat(chatId) {
     const socket = get().socket;

@@ -8,7 +8,7 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
   // --- DEFENSIVE CHECK 1 ---
   // If chat or participant is missing, return null to prevent app crash
   const participant = chat.participant;
-  const { onlineUsers, typingUsers, unreadChats } = useSocketStore();
+  const { onlineUsers, typingUsers } = useSocketStore();
   if (!chat || !chat.participant) {
     console.log("hmm")
     return null;
@@ -16,8 +16,8 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
 
   const isOnline = onlineUsers.has(participant._id);
   const isTyping = typingUsers.get(chat._id) === participant._id;
-  const hasUnread = unreadChats.has(chat._id);
-
+  const isRead = chat.isRead;
+  
   return (
     <Pressable className="flex-row items-center py-[14px] active:opacity-70" onPress={onPress}>
       {/* avatar & online indicator */}
@@ -37,16 +37,18 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
       <View className="flex-1 ml-4">
         <View className="flex-row items-center justify-between">
           <Text
-            className={`text-[16px] font-[500] ${hasUnread ? "text-primary" : "text-foreground"}`}
+            className={`text-[16px] font-[500] ${!isRead ? "text-primary" : "text-foreground"}`}
           >
             {/* Fallback for name */}
             {participant?.name || "Unknown"}
           </Text>
 
           <View className="flex-row items-center gap-2">
-            {hasUnread && <View className="w-2.5 h-2.5 bg-primary rounded-full" />}
+            {!isRead && <View className="w-2.5 h-2.5 bg-primary rounded-full" />}
             <Text className="text-[12px] text-[#848484]">
-              4:00 pm
+                            {chat.lastMessageAt
+                ? formatDistanceToNow(new Date(chat.lastMessageAt), { addSuffix: false })
+                : ""}
             </Text>
           </View>
         </View>
@@ -56,7 +58,7 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
             <Text className="text-sm text-primary italic">typing...</Text>
           ) : (
             <Text
-              className={`text-[14px] flex-1 mr-3 ${hasUnread ? "text-[#FAFAFA]" : "text-[#848484]"}`}
+              className={`text-[14px] flex-1 mr-3 ${!isRead ? "text-[#FAFAFA]" : "text-[#848484]"}`}
               numberOfLines={1}
             >
               {chat.lastMessage?.text || "No messages yet"}

@@ -36,8 +36,17 @@ const ChatDetailScreen = () => {
   const { data: currentUser } = useCurrentUser();
   const { data: messages, isLoading, refetch } = useMessages(chatId);
 
-  const { joinChat, leaveChat, sendMessage, sendTyping, isConnected, onlineUsers, typingUsers } =
-    useSocketStore();
+  const {
+    socket,
+    joinChat,
+    leaveChat,
+    sendMessage,
+    sendTyping,
+    isConnected,
+    onlineUsers,
+    typingUsers,
+  } = useSocketStore();
+
 
   const isOnline = participantId ? onlineUsers.has(participantId) : false;
   const isTyping = typingUsers.get(chatId) === participantId;
@@ -58,9 +67,11 @@ const ChatDetailScreen = () => {
   // Handle joining/leaving chat room
   useFocusEffect(
     useCallback(() => {
-      if (!chatId || !isConnected) return;
+      if (!chatId || !isConnected||!socket) return;
 
       joinChat(chatId);
+
+      socket.emit("chat:markRead", chatId);
 
       return () => {
         leaveChat(chatId);

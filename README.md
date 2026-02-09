@@ -10,16 +10,6 @@ Bolt is a high-performance, full-stack mobile messaging application built to del
 
 ---
 
-## 🎥 Project Showcase
-
-<p align="center">
-  <img src="assets/demo.gif" alt="Bolt App Demo" width="300px" />
-  <br>
-  <em>Live demonstration of real-time message delivery and UI fluidity.</em>
-</p>
-
----
-
 ## ✨ Key Features
 
 * **Instantaneous Messaging:** Bi-directional communication using WebSockets for sub-100ms message delivery.
@@ -46,9 +36,9 @@ Bolt is a high-performance, full-stack mobile messaging application built to del
 
 ## 📸 Screenshots
 
-| Onboarding Flow | Chat Interface | User Settings |
-| :---: | :---: | :---: |
-| <img src="assets/screen1.png" width="200" /> | <img src="assets/screen2.png" width="200" /> | <img src="assets/screen3.png" width="200" /> |
+| Onboarding Flow | Chats Page | Chat Interface | User Settings |
+| :---: | :---: | :---: | :---: |
+| <img src="mobile/assets/SignUpPage.jpeg" width="200" /> | <img src="mobile/assets/ChatPage2.jpeg" width="200" /> | <img src="mobile/assets/ChatPage.jpeg" width="200" /> | <img src="mobile/assets/ProfilePage.jpeg" width="200" /> |
 
 ---
 

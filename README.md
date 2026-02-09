@@ -10,7 +10,7 @@ Bolt is a high-performance, minimalist style, full-stack mobile messaging applic
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **Instantaneous Messaging:** Bi-directional communication using WebSockets for sub-100ms message delivery.
 * **Modern Authentication:** Secure, sign-in and sign-up flows powered by **Clerk**.
@@ -34,7 +34,7 @@ Bolt is a high-performance, minimalist style, full-stack mobile messaging applic
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | Onboarding Flow | Chats Page | Chat Interface | User Settings |
 | :---: | :---: | :---: | :---: |
@@ -42,7 +42,7 @@ Bolt is a high-performance, minimalist style, full-stack mobile messaging applic
 
 ---
 
-## 🧠 Engineering Deep Dive
+## Engineering Deep Dive
 
 ### 1. Handling Concurrency
 One of the main challenges was syncing **Clerk’s** user registration with the custom backend database. I implemented a robust onboarding flow that resolves potential race conditions, ensuring that the Socket.io connection only initializes once the user identity is fully verified and synced.
@@ -54,7 +54,7 @@ Instead of traditional Redux, I utilized **TanStack Query**. This allowed for:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Bun](https://bun.sh/) installed on your machine.

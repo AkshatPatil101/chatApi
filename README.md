@@ -1,6 +1,6 @@
 # ⚡ Bolt | Real-Time Messaging Platform
 
-Bolt is a high-performance, full-stack mobile messaging application built to deliver a "zero-latency" user experience. By combining **Socket.io** for persistent connections and **TanStack Query** for intelligent state management, Bolt ensures that communication is not just real-time, but instantaneous.
+Bolt is a high-performance, minimalist style, full-stack mobile messaging application built to deliver a "zero-latency" user experience. By combining **Socket.io** for persistent connections and **TanStack Query** for intelligent state management, Bolt ensures that communication is not just real-time, but instantaneous.
 
 ![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
